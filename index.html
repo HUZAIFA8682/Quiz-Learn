@@ -3,116 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuizPro Elite | The Ultimate Challenge</title>
-    <!-- Dependencies -->
+    <title>QuizPro Zenith | Tactical Intelligence Platform</title>
+    <!-- Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --secondary: #ec4899;
-            --bg: #0f172a;
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --border: rgba(255, 255, 255, 0.1);
+            --primary: #8b5cf6;
+            --primary-light: #a78bfa;
+            --secondary: #06b6d4;
+            --accent: #f43f5e;
+            --bg-dark: #020617;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --border-glow: rgba(139, 92, 246, 0.3);
             --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --success: #22c55e;
-            --danger: #ef4444;
+            --text-dim: #94a3b8;
+            --success: #10b981;
             --warning: #f59e0b;
-        }
-
-        .light-mode {
-            --bg: #f1f5f9;
-            --card-bg: rgba(255, 255, 255, 0.8);
-            --border: rgba(0, 0, 0, 0.05);
-            --text-main: #0f172a;
-            --text-muted: #64748b;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, sans-serif;
+            font-family: 'Plus+Jakarta+Sans', sans-serif;
         }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 40%),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
-        /* Layout */
         .app-container {
-            display: flex;
-            width: 100%;
-            max-width: 1440px;
-            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
         }
 
-        /* Sidebar */
+        /* Sidebar Styling */
         .sidebar {
-            width: 280px;
-            height: 100vh;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border-right: 1px solid var(--border);
+            background: rgba(15, 23, 42, 0.98);
+            border-right: 1px solid rgba(139, 92, 246, 0.2);
             padding: 2rem;
             display: flex;
             flex-direction: column;
             gap: 2rem;
+            backdrop-filter: blur(20px);
             position: sticky;
             top: 0;
+            height: 100vh;
         }
 
-        .logo {
+        .brand {
             display: flex;
             align-items: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--primary-light);
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
             gap: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 12px;
+            gap: 14px;
+            padding: 14px 18px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: 0.2s;
-            color: var(--text-muted);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-dim);
             text-decoration: none;
+            border: 1px solid transparent;
         }
 
         .nav-item:hover, .nav-item.active {
-            background: var(--primary);
-            color: white;
+            background: rgba(139, 92, 246, 0.12);
+            color: var(--text-main);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+        .main-view {
+            padding: 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         .screen {
             display: none;
-            width: 100%;
-            max-width: 800px;
             animation: slideUp 0.5s ease-out;
         }
 
@@ -121,541 +119,744 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Glass Cards */
-        .card {
+        /* Cards & Glassmorphism */
+        .glass-card {
             background: var(--card-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
             padding: 2.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
-        /* Typography */
-        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-        p { color: var(--text-muted); line-height: 1.6; }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
 
-        /* Buttons */
         .btn {
-            padding: 0.8rem 2rem;
-            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
             border: none;
-            font-weight: 600;
+            padding: 1.1rem 2.2rem;
+            border-radius: 16px;
+            font-weight: 700;
+            font-family: 'Orbitron';
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.4s;
+            text-transform: uppercase;
+            font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px -5px rgba(139, 92, 246, 0.5);
         }
 
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px var(--primary); }
+        .btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 30px -10px rgba(139, 92, 246, 0.7);
+            filter: brightness(1.1);
+        }
 
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-outline:hover { background: var(--border); }
+        .btn:active { transform: translateY(0); }
 
-        /* Quiz Specifics */
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+        }
+
+        /* Quiz Components */
+        .quiz-meta-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .timer-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .timer-circle-bg {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 6;
+        }
+
+        .timer-circle-prog {
+            fill: none;
+            stroke: var(--secondary);
+            stroke-width: 6;
+            stroke-linecap: round;
+            stroke-dasharray: 226;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear, stroke 0.3s;
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron';
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-main);
+        }
+
+        .question-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+            line-height: 1.4;
+            color: white;
+            text-wrap: balance;
+        }
+
         .options-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
         }
 
         .option-card {
-            background: var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             padding: 1.5rem;
-            border-radius: 16px;
+            border-radius: 20px;
             cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.2s;
-            text-align: left;
-            font-weight: 500;
-        }
-
-        .option-card:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
-        .option-card.correct { border-color: var(--success); background: rgba(34, 197, 94, 0.2); }
-        .option-card.wrong { border-color: var(--danger); background: rgba(239, 68, 68, 0.2); }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            margin: 2rem 0;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-
-        .timer-ring {
-            width: 60px;
-            height: 60px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 18px;
             position: relative;
         }
 
-        /* Stats Grid */
+        .option-card:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--primary);
+            transform: scale(1.02);
+        }
+
+        .option-card.selected {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: var(--primary);
+        }
+
+        .option-card.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .option-card.wrong {
+            background: rgba(244, 63, 94, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(244, 63, 94, 0.3);
+        }
+
+        .key-indicator {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron';
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        /* Stats Dashboard */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
-        .stat-box {
-            background: var(--border);
-            padding: 1.5rem;
-            border-radius: 18px;
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            padding: 1.8rem;
+            border-radius: 24px;
             text-align: center;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: transform 0.3s;
         }
 
-        .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .stat-card:hover { transform: translateY(-5px); }
 
-        /* Leaderboard Table */
-        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-        th { text-align: left; padding: 1rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
-        td { padding: 1rem; border-bottom: 1px solid var(--border); }
+        .stat-val {
+            font-family: 'Orbitron';
+            font-size: 2rem;
+            display: block;
+            margin-top: 0.5rem;
+            background: linear-gradient(to bottom, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        /* Theme Toggle */
-        .theme-toggle {
+        .streak-badge {
+            background: linear-gradient(45deg, #f59e0b, #ef4444);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
             position: absolute;
-            top: 2rem;
-            right: 2rem;
-            z-index: 100;
+            top: -10px;
+            right: 20px;
+            animation: pulse-gold 2s infinite;
         }
 
-        @media (max-width: 768px) {
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 850px) {
+            .app-container { grid-template-columns: 1fr; }
             .sidebar { display: none; }
             .options-grid { grid-template-columns: 1fr; }
-            .main-content { padding: 1rem; }
-            .card { padding: 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo">
-                <i data-lucide="zap"></i>
-                QuizPro Elite
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="brand">
+            <i data-lucide="shield-check"></i>
+            ZENITH OS
+        </div>
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" onclick="showScreen('start-screen')">
+                <i data-lucide="layout-dashboard"></i> Deployment
+            </a>
+            <a href="#" class="nav-item" onclick="showScreen('leaderboard-screen')">
+                <i data-lucide="award"></i> Hall of Fame
+            </a>
+            <a href="#" class="nav-item" onclick="showScreen('intel-screen')">
+                <i data-lucide="database"></i> Intel Cache
+            </a>
+        </nav>
+        
+        <div style="margin-top: auto;">
+            <div class="glass-card" style="padding: 1.2rem; border-radius: 18px; border-color: rgba(6, 182, 212, 0.3);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-size: 0.7rem; color: var(--text-dim);">LEVEL</span>
+                    <span id="user-level" style="font-size: 0.7rem; font-weight: 800; color: var(--secondary);">LVL 1</span>
+                </div>
+                <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;">
+                    <div id="level-progress" style="height: 100%; width: 20%; background: var(--secondary); box-shadow: 0 0 10px var(--secondary);"></div>
+                </div>
+                <div id="operator-tag" style="margin-top: 15px; font-family: 'Orbitron'; font-size: 0.8rem; color: white;">GUEST_OPERATOR</div>
             </div>
-            <nav style="flex: 1;">
-                <a href="#" class="nav-item active" onclick="showScreen('home-screen')">
-                    <i data-lucide="layout-dashboard"></i> Dashboard
-                </a>
-                <a href="#" class="nav-item" onclick="showScreen('leaderboard-screen')">
-                    <i data-lucide="trophy"></i> Global Ranks
-                </a>
-                <a href="#" class="nav-item">
-                    <i data-lucide="settings"></i> Settings
-                </a>
-            </nav>
-            <div class="stat-box" style="background: var(--primary); color: white;">
-                <p style="color: rgba(255,255,255,0.8); font-size: 0.8rem;">BEST SCORE</p>
-                <div id="sidebar-highscore" style="font-size: 1.5rem; font-weight: 800;">0</div>
+        </div>
+    </aside>
+
+    <main class="main-view">
+        <!-- Start Screen -->
+        <section id="start-screen" class="screen active">
+            <div class="glass-card" style="padding: 5rem 3rem; text-align: center;">
+                <div style="display: inline-flex; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 24px; margin-bottom: 2rem; border: 1px solid rgba(139, 92, 246, 0.2);">
+                    <i data-lucide="cpu" style="width: 48px; height: 48px; color: var(--primary-light);"></i>
+                </div>
+                <h1 style="font-family: 'Orbitron'; font-size: 3.5rem; margin-bottom: 1.5rem; letter-spacing: -2px;">COMMAND CENTER</h1>
+                <p style="color: var(--text-dim); font-size: 1.1rem; max-width: 600px; margin: 0 auto 3.5rem; line-height: 1.6;">
+                    Strategic evaluation of technical expertise. Select your operational domain and begin the verification sequence.
+                </p>
+                
+                <div style="display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;">
+                    <input type="text" id="username-input" placeholder="DESIGNATION CODE..." 
+                        style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); padding: 1.1rem 1.5rem; border-radius: 16px; color: white; font-family: 'Orbitron'; width: 300px; outline: none; border-color: rgba(139, 92, 246, 0.3);">
+                    
+                    <button class="btn" onclick="startSequence()">
+                        INITIALIZE <i data-lucide="zap"></i>
+                    </button>
+                </div>
+
+                <div style="margin-top: 4rem; display: flex; gap: 2rem; justify-content: center;">
+                    <div style="text-align: center;">
+                        <span style="display: block; font-family: 'Orbitron'; color: var(--secondary); font-size: 1.2rem;">2.4k+</span>
+                        <span style="font-size: 0.7rem; color: var(--text-dim);">ACTIVE OPS</span>
+                    </div>
+                    <div style="text-align: center;">
+                        <span style="display: block; font-family: 'Orbitron'; color: var(--primary-light); font-size: 1.2rem;">580+</span>
+                        <span style="font-size: 0.7rem; color: var(--text-dim);">SYSTEMS VERIFIED</span>
+                    </div>
+                </div>
             </div>
-        </aside>
+        </section>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <button class="btn btn-outline theme-toggle" id="themeBtn">
-                <i data-lucide="sun"></i>
-            </button>
-
-            <!-- Screen: Home -->
-            <section id="home-screen" class="screen active">
-                <div class="card">
-                    <h1 id="welcome-text">Welcome, Challenger</h1>
-                    <p>Select your domain and prove your mastery. 10 questions. 15 seconds each. Zero room for error.</p>
-                    
-                    <div class="stats-grid" style="margin-top: 2rem;">
-                        <div class="stat-box">
-                            <i data-lucide="code" style="color: var(--primary)"></i>
-                            <h3>Tech</h3>
-                            <p>Level: Hard</p>
-                        </div>
-                        <div class="stat-box">
-                            <i data-lucide="globe" style="color: var(--secondary)"></i>
-                            <h3>Geo</h3>
-                            <p>Level: Medium</p>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                        <input type="text" id="username" placeholder="Enter your alias..." class="btn btn-outline" style="flex: 1; text-align: left;">
-                        <button id="startBtn" class="btn btn-primary">Start Operative Mode <i data-lucide="arrow-right"></i></button>
+        <!-- Quiz Screen -->
+        <section id="quiz-screen" class="screen">
+            <div class="quiz-meta-bar">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div id="category-badge" style="background: rgba(6, 182, 212, 0.1); color: var(--secondary); padding: 8px 16px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; border: 1px solid rgba(6, 182, 212, 0.2); text-transform: uppercase; letter-spacing: 1px;">GENERAL_INTEL</div>
+                    <div>
+                        <span style="color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; display: block;">Verification Progress</span>
+                        <h2 id="progress-text" style="font-family: 'Orbitron'; font-size: 1.4rem;">01 / 10</h2>
                     </div>
                 </div>
-            </section>
 
-            <!-- Screen: Quiz -->
-            <section id="quiz-screen" class="screen">
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <span id="question-category" style="background: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">GENERAL</span>
-                            <span id="question-difficulty" style="margin-left: 10px; color: var(--text-muted); font-size: 0.8rem;">HARD</span>
-                        </div>
-                        <div id="timer-text" style="font-weight: 800; font-size: 1.2rem; color: var(--warning);">15s</div>
-                    </div>
+                <div class="timer-container">
+                    <svg class="timer-svg">
+                        <circle class="timer-circle-bg" cx="40" cy="40" r="36"></circle>
+                        <circle id="timer-progress" class="timer-circle-prog" cx="40" cy="40" r="36"></circle>
+                    </svg>
+                    <div class="timer-text" id="timer-val">20</div>
+                </div>
+            </div>
 
-                    <div class="progress-bar-container">
-                        <div class="progress-fill" id="progress-fill"></div>
-                    </div>
-
-                    <h2 id="question-text" style="margin: 1.5rem 0; font-size: 1.8rem; line-height: 1.3;">Loading challenge...</h2>
-
-                    <div class="options-grid" id="options-container">
-                        <!-- Options injected here -->
-                    </div>
-
-                    <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; gap: 1rem;">
-                            <button id="lifeline-5050" class="btn btn-outline" title="50:50 Lifeline">
-                                <i data-lucide="split"></i>
-                            </button>
-                        </div>
-                        <button id="nextBtn" class="btn btn-primary" disabled>Next Question <i data-lucide="chevron-right"></i></button>
+            <div class="glass-card" style="min-height: 450px;">
+                <div id="quiz-area">
+                    <div id="streak-indicator" class="streak-badge" style="display: none;">3X COMBO</div>
+                    <p class="question-text" id="question-body">Deciphering packet encryption protocols...</p>
+                    <div class="options-grid" id="options-grid">
+                        <!-- Options populated via JS -->
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Screen: Results -->
-            <section id="result-screen" class="screen">
-                <div class="card" style="text-align: center;">
-                    <div id="result-icon" style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
-                    <h1 id="result-title">Mission Accomplished</h1>
-                    <p id="result-msg">You've successfully completed the evaluation.</p>
-
-                    <div class="stats-grid" style="margin: 2.5rem 0;">
-                        <div class="stat-box">
-                            <div class="stat-value" id="res-score">0/10</div>
-                            <p>Correct</p>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value" id="res-accuracy">0%</div>
-                            <p>Accuracy</p>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-value" id="res-time">0s</div>
-                            <p>Avg Time</p>
-                        </div>
-                    </div>
-
-                    <div style="height: 300px; margin-bottom: 2rem;">
-                        <canvas id="performanceChart"></canvas>
-                    </div>
-
-                    <button class="btn btn-primary" onclick="location.reload()">New Mission</button>
-                    <button class="btn btn-outline" onclick="showScreen('leaderboard-screen')">View Rankings</button>
+            <div style="margin-top: 2.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <div id="score-float" style="font-family: 'Orbitron'; color: var(--secondary); font-size: 1.1rem; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="target"></i> <span id="current-score">0000</span> XP
                 </div>
-            </section>
+                <button class="btn" id="next-action" style="visibility: hidden;">
+                    CONTINUE <i data-lucide="arrow-right"></i>
+                </button>
+            </div>
+        </section>
 
-            <!-- Screen: Leaderboard -->
-            <section id="leaderboard-screen" class="screen">
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                        <h1>Global Leaderboard</h1>
-                        <button class="btn btn-outline" onclick="showScreen('home-screen')">Back</button>
+        <!-- Results Dashboard -->
+        <section id="result-screen" class="screen">
+            <div class="glass-card">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <h1 style="font-family: 'Orbitron'; font-size: 2.5rem; margin-bottom: 0.5rem;">MISSION RESULTS</h1>
+                    <div id="result-status" style="color: var(--success); font-weight: 800; font-size: 0.9rem; letter-spacing: 2px;">DEPLOYMENT SUCCESSFUL</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i data-lucide="check-circle" style="color: var(--success);"></i>
+                        <span class="stat-val" id="res-accuracy">0%</span>
+                        <span style="font-size: 0.7rem; color: var(--text-dim);">ACCURACY</span>
                     </div>
-                    
-                    <div style="overflow-x: auto;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Rank</th>
-                                    <th>Operative</th>
-                                    <th>Score</th>
-                                    <th>Accuracy</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="leaderboard-body">
-                                <!-- Data injected here -->
-                            </tbody>
-                        </table>
+                    <div class="stat-card">
+                        <i data-lucide="zap" style="color: var(--warning);"></i>
+                        <span class="stat-val" id="res-xp">0</span>
+                        <span style="font-size: 0.7rem; color: var(--text-dim);">XP ACCUMULATED</span>
+                    </div>
+                    <div class="stat-card">
+                        <i data-lucide="trending-up" style="color: var(--primary-light);"></i>
+                        <span class="stat-val" id="res-streak">0</span>
+                        <span style="font-size: 0.7rem; color: var(--text-dim);">MAX COMBO</span>
+                    </div>
+                    <div class="stat-card">
+                        <i data-lucide="clock" style="color: var(--secondary);"></i>
+                        <span class="stat-val" id="res-time">0s</span>
+                        <span style="font-size: 0.7rem; color: var(--text-dim);">AVG RESPONSE</span>
                     </div>
                 </div>
-            </section>
 
-        </main>
-    </div>
+                <div style="height: 350px; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 1.5rem; margin-bottom: 3rem; border: 1px solid rgba(255,255,255,0.05);">
+                    <canvas id="performance-analysis"></canvas>
+                </div>
 
-    <script>
-        // --- DATA ---
-        const QUESTIONS = [
-            { q: "Which programming language is known as the 'mother of all languages'?", a: ["C", "Fortran", "Assembly", "Basic"], c: 0, cat: "Tech", diff: "Hard" },
-            { q: "What is the largest desert on Earth?", a: ["Sahara", "Gobi", "Antarctic", "Arabian"], c: 2, cat: "Geo", diff: "Medium" },
-            { q: "In which year was the first iPhone released?", a: ["2005", "2007", "2008", "2010"], c: 1, cat: "Tech", diff: "Easy" },
-            { q: "Which element has the chemical symbol 'Au'?", a: ["Silver", "Copper", "Gold", "Iron"], c: 2, cat: "Science", diff: "Easy" },
-            { q: "What does HTTP stand for in web terminology?", a: ["HyperText Transfer Protocol", "High Transfer Tech Protocol", "Hyper Transfer Text Program", "Hidden Text Transfer Protocol"], c: 0, cat: "Tech", diff: "Medium" },
-            { q: "Which country has the most natural lakes?", a: ["USA", "Russia", "Canada", "Australia"], c: 2, cat: "Geo", diff: "Hard" },
-            { q: "Who is credited with inventing the World Wide Web?", a: ["Steve Jobs", "Bill Gates", "Tim Berners-Lee", "Mark Zuckerberg"], c: 2, cat: "Tech", diff: "Medium" },
-            { q: "What is the capital city of Japan?", a: ["Osaka", "Kyoto", "Nagoya", "Tokyo"], c: 3, cat: "Geo", diff: "Easy" },
-            { q: "Which planet is known as the Red Planet?", a: ["Venus", "Mars", "Jupiter", "Saturn"], c: 1, cat: "Science", diff: "Easy" },
-            { q: "What is the value of Pi to 2 decimal places?", a: ["3.12", "3.14", "3.16", "3.18"], c: 1, cat: "Math", diff: "Medium" }
-        ];
+                <div style="display: flex; gap: 1.5rem; justify-content: center;">
+                    <button class="btn" onclick="location.reload()">NEW MISSION</button>
+                    <button class="btn btn-ghost" onclick="showScreen('leaderboard-screen')">VIEW RANKS</button>
+                    <button class="btn btn-ghost" onclick="shareResults()">
+                        <i data-lucide="share-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
 
-        // --- STATE ---
-        let state = {
-            user: "Guest",
-            currentIdx: 0,
-            score: 0,
-            timeLeft: 15,
-            timer: null,
-            answers: [], // Stores true/false for each question
-            times: [],   // Stores time taken for each
-            lifelines: { fiftyFifty: true }
-        };
+        <!-- Hall of Fame -->
+        <section id="leaderboard-screen" class="screen">
+            <div class="glass-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                    <div>
+                        <h1 style="font-family: 'Orbitron';">HALL OF FAME</h1>
+                        <p style="color: var(--text-dim); font-size: 0.8rem;">Top tier operators globally</p>
+                    </div>
+                    <i data-lucide="trophy" style="width: 48px; height: 48px; color: #fbbf24;"></i>
+                </div>
 
-        // --- CORE LOGIC ---
-        function init() {
-            lucide.createIcons();
-            updateHighscoreSidebar();
-            
-            document.getElementById('startBtn').addEventListener('click', startQuiz);
-            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
-            document.getElementById('themeBtn').addEventListener('click', toggleTheme);
-            document.getElementById('lifeline-5050').addEventListener('click', useFiftyFifty);
-        }
+                <div id="ranks-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Leaders -->
+                </div>
+            </div>
+        </section>
 
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            
-            // Sidebar active state
-            document.querySelectorAll('.nav-item').forEach(nav => {
-                nav.classList.toggle('active', nav.getAttribute('onclick')?.includes(id));
-            });
+        <!-- Intel Cache -->
+        <section id="intel-screen" class="screen">
+            <div class="glass-card">
+                <h1 style="font-family: 'Orbitron'; margin-bottom: 2rem;">INTEL CONFIGURATION</h1>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div class="stat-card" style="text-align: left;">
+                        <h3 style="margin-bottom: 1rem; font-size: 0.9rem;">AUDIO SYNCHRONIZATION</h3>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span>System Alerts</span>
+                            <button class="btn btn-ghost" style="padding: 8px 16px; min-width: 100px;" id="audio-toggle">ACTIVE</button>
+                        </div>
+                    </div>
+                    <div class="stat-card" style="text-align: left;">
+                        <h3 style="margin-bottom: 1rem; font-size: 0.9rem;">SIMULATION DIFFICULTY</h3>
+                        <select id="diff-select" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 12px; outline: none;">
+                            <option value="Standard">STANDARD (20s)</option>
+                            <option value="Hardcore">HARDCORE (10s)</option>
+                            <option value="Blitz">BLITZ (5s)</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top: 3rem; text-align: center; color: var(--text-dim); font-size: 0.8rem;">
+                    BUILD VERSION: 4.2.0-STABLE | KERNEL: ZENITH-X
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
 
-            if(id === 'leaderboard-screen') renderLeaderboard();
-        }
+<script>
+    /* ================= DATA REPOSITORY ================= */
+    const DATA_VAULT = [
+        { q: "Which hashing algorithm is considered the most secure for passwords today?", a: ["MD5", "SHA-1", "Argon2", "DES"], c: 2, cat: "Security" },
+        { q: "What is the primary function of a Load Balancer?", a: ["Encrypting traffic", "Distributing requests", "Storing cache", "Formatting JSON"], c: 1, cat: "Architecture" },
+        { q: "In Docker, what command is used to list all running containers?", a: ["docker show", "docker ps", "docker images", "docker run -l"], c: 1, cat: "DevOps" },
+        { q: "Which HTTP status code represents 'Conflict'?", a: ["403", "404", "409", "418"], c: 2, cat: "Web" },
+        { q: "What is the Big O complexity of a binary search?", a: ["O(n)", "O(log n)", "O(n^2)", "O(1)"], c: 1, cat: "Algorithms" },
+        { q: "Which company created the Go programming language?", a: ["Google", "Meta", "JetBrains", "Oracle"], c: 0, cat: "Programming" },
+        { q: "What does 'SOLID' principles stand for in Software Engineering?", a: ["Design Patterns", "Database Normalization", "Code Architecture", "Deployment Pipeline"], c: 2, cat: "Design" },
+        { q: "Which cloud service model does AWS EC2 follow?", a: ["SaaS", "PaaS", "IaaS", "Serverless"], c: 2, cat: "Cloud" },
+        { q: "What is a 'Ghost' in Git terminology?", a: ["Lost commit", "Deleted branch", "Unstaged change", "Detached HEAD"], c: 3, cat: "Version Control" },
+        { q: "In JavaScript, what is the 'Temporal Dead Zone'?", a: ["Memory leak", "Scope restriction", "Sync error", "Network delay"], c: 1, cat: "Advanced JS" }
+    ];
 
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const icon = document.body.classList.contains('light-mode') ? 'moon' : 'sun';
-            document.getElementById('themeBtn').innerHTML = `<i data-lucide="${icon}"></i>`;
-            lucide.createIcons();
-        }
+    /* ================= APP STATE ================= */
+    let AppState = {
+        userName: "GUEST",
+        currentIndex: 0,
+        score: 0,
+        streak: 0,
+        maxStreak: 0,
+        history: [], // [{timeTaken, isCorrect}]
+        timerValue: 20,
+        maxTimer: 20,
+        timerInterval: null,
+        isAudioOn: true,
+        userLevel: 1,
+        userXP: 0,
+        chartInstance: null
+    };
 
-        function startQuiz() {
-            const nameInput = document.getElementById('username').value.trim();
-            state.user = nameInput || "Agent_" + Math.floor(Math.random() * 1000);
-            state.currentIdx = 0;
-            state.score = 0;
-            state.answers = [];
-            state.times = [];
-            state.lifelines.fiftyFifty = true;
-            document.getElementById('lifeline-5050').disabled = false;
-            
-            showScreen('quiz-screen');
-            loadQuestion();
-        }
+    /* ================= CORE INITIALIZATION ================= */
+    function init() {
+        lucide.createIcons();
+        document.getElementById('next-action').addEventListener('click', proceedSequence);
+        document.getElementById('audio-toggle').onclick = toggleAudio;
+        loadUserData();
+        renderRanks();
+    }
 
-        function loadQuestion() {
-            const q = QUESTIONS[state.currentIdx];
-            const container = document.getElementById('options-container');
-            
-            // UI Updates
-            document.getElementById('question-text').innerText = q.q;
-            document.getElementById('question-category').innerText = q.cat.toUpperCase();
-            document.getElementById('question-difficulty').innerText = q.diff.toUpperCase();
-            document.getElementById('progress-fill').style.width = `${((state.currentIdx) / QUESTIONS.length) * 100}%`;
-            document.getElementById('nextBtn').disabled = true;
+    function toggleAudio() {
+        AppState.isAudioOn = !AppState.isAudioOn;
+        const btn = document.getElementById('audio-toggle');
+        btn.textContent = AppState.isAudioOn ? "ACTIVE" : "DISABLED";
+        btn.style.borderColor = AppState.isAudioOn ? "var(--secondary)" : "var(--accent)";
+    }
 
-            // Render Options
-            container.innerHTML = '';
-            q.a.forEach((opt, i) => {
-                const div = document.createElement('div');
-                div.className = 'option-card';
-                div.innerHTML = `<span>${String.fromCharCode(65 + i)}.</span> ${opt}`;
-                div.onclick = () => selectOption(i);
-                container.appendChild(div);
-            });
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.getAttribute('onclick')?.includes(id));
+        });
+    }
 
-            startTimer();
-        }
+    /* ================= QUIZ LOGIC ================= */
+    function startSequence() {
+        const input = document.getElementById('username-input').value.trim();
+        AppState.userName = input || "OPERATOR_" + Math.floor(Math.random()*9000);
+        document.getElementById('operator-tag').textContent = AppState.userName;
+        
+        // Settings
+        const diff = document.getElementById('diff-select').value;
+        if(diff === "Hardcore") AppState.maxTimer = 10;
+        else if(diff === "Blitz") AppState.maxTimer = 5;
+        else AppState.maxTimer = 20;
 
-        function startTimer() {
-            clearInterval(state.timer);
-            state.timeLeft = 15;
+        AppState.currentIndex = 0;
+        AppState.score = 0;
+        AppState.streak = 0;
+        AppState.maxStreak = 0;
+        AppState.history = [];
+        
+        showScreen('quiz-screen');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = DATA_VAULT[AppState.currentIndex];
+        document.getElementById('category-badge').textContent = q.cat;
+        document.getElementById('progress-text').textContent = `${(AppState.currentIndex + 1).toString().padStart(2, '0')} / ${DATA_VAULT.length}`;
+        document.getElementById('question-body').textContent = q.q;
+        document.getElementById('next-action').style.visibility = 'hidden';
+        
+        const grid = document.getElementById('options-grid');
+        grid.innerHTML = '';
+
+        q.a.forEach((opt, i) => {
+            const card = document.createElement('div');
+            card.className = 'option-card';
+            card.innerHTML = `
+                <div class="key-indicator">${String.fromCharCode(65+i)}</div>
+                <span style="font-weight: 500;">${opt}</span>
+            `;
+            card.onclick = () => handleChoice(i, card);
+            grid.appendChild(card);
+        });
+
+        startTimer();
+    }
+
+    function startTimer() {
+        clearInterval(AppState.timerInterval);
+        AppState.timerValue = AppState.maxTimer;
+        const text = document.getElementById('timer-val');
+        const prog = document.getElementById('timer-progress');
+        
+        updateTimerUI();
+
+        AppState.timerInterval = setInterval(() => {
+            AppState.timerValue--;
             updateTimerUI();
-            
-            state.timer = setInterval(() => {
-                state.timeLeft--;
-                updateTimerUI();
-                if(state.timeLeft <= 0) {
-                    clearInterval(state.timer);
-                    autoFail();
-                }
-            }, 1000);
-        }
 
-        function updateTimerUI() {
-            const el = document.getElementById('timer-text');
-            el.innerText = `${state.timeLeft}s`;
-            el.style.color = state.timeLeft < 5 ? 'var(--danger)' : 'var(--warning)';
-        }
-
-        function selectOption(idx) {
-            if(document.getElementById('nextBtn').disabled === false) return; // Prevent double click
-            
-            clearInterval(state.timer);
-            const q = QUESTIONS[state.currentIdx];
-            const options = document.querySelectorAll('.option-card');
-            const isCorrect = idx === q.c;
-
-            state.times.push(15 - state.timeLeft);
-            state.answers.push(isCorrect);
-            if(isCorrect) state.score++;
-
-            options[idx].classList.add(isCorrect ? 'correct' : 'wrong');
-            if(!isCorrect) options[q.c].classList.add('correct');
-
-            document.getElementById('nextBtn').disabled = false;
-        }
-
-        function autoFail() {
-            state.answers.push(false);
-            state.times.push(15);
-            const q = QUESTIONS[state.currentIdx];
-            document.querySelectorAll('.option-card')[q.c].classList.add('correct');
-            document.getElementById('nextBtn').disabled = false;
-        }
-
-        function useFiftyFifty() {
-            if(!state.lifelines.fiftyFifty) return;
-            const q = QUESTIONS[state.currentIdx];
-            const options = Array.from(document.querySelectorAll('.option-card'));
-            
-            let removed = 0;
-            const shuffledIndices = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
-            
-            for(let i of shuffledIndices) {
-                if(i !== q.c && removed < 2) {
-                    options[i].style.opacity = '0.2';
-                    options[i].onclick = null;
-                    removed++;
-                }
+            if(AppState.timerValue <= 0) {
+                clearInterval(AppState.timerInterval);
+                handleChoice(-1); // Timeout
             }
-            
-            state.lifelines.fiftyFifty = false;
-            document.getElementById('lifeline-5050').disabled = true;
-            document.getElementById('lifeline-5050').style.opacity = '0.3';
+        }, 1000);
+    }
+
+    function updateTimerUI() {
+        const text = document.getElementById('timer-val');
+        const prog = document.getElementById('timer-progress');
+        text.textContent = AppState.timerValue;
+
+        // Progress ring logic (226 is circumfrence of r=36)
+        const offset = 226 - (AppState.timerValue / AppState.maxTimer) * 226;
+        prog.style.strokeDashoffset = offset;
+
+        if(AppState.timerValue <= 5) prog.style.stroke = 'var(--accent)';
+        else prog.style.stroke = 'var(--secondary)';
+    }
+
+    function handleChoice(index, element = null) {
+        clearInterval(AppState.timerInterval);
+        const correct = DATA_VAULT[AppState.currentIndex].c;
+        const cards = document.querySelectorAll('.option-card');
+        
+        cards.forEach(c => c.style.pointerEvents = 'none');
+
+        const isCorrect = index === correct;
+        const timeSpent = AppState.maxTimer - AppState.timerValue;
+
+        if(isCorrect) {
+            if(element) element.classList.add('correct');
+            AppState.score += (100 + (AppState.streak * 50));
+            AppState.streak++;
+            if(AppState.streak > AppState.maxStreak) AppState.maxStreak = AppState.streak;
+            showStreak();
+        } else {
+            if(element) element.classList.add('wrong');
+            cards[correct].classList.add('correct');
+            AppState.streak = 0;
+            hideStreak();
         }
 
-        function nextQuestion() {
-            state.currentIdx++;
-            if(state.currentIdx < QUESTIONS.length) {
-                loadQuestion();
-            } else {
-                finishQuiz();
-            }
+        AppState.history.push({ isCorrect, timeSpent });
+        document.getElementById('current-score').textContent = AppState.score.toString().padStart(4, '0');
+        document.getElementById('next-action').style.visibility = 'visible';
+    }
+
+    function showStreak() {
+        const badge = document.getElementById('streak-indicator');
+        if(AppState.streak > 1) {
+            badge.textContent = `${AppState.streak}X COMBO`;
+            badge.style.display = 'block';
         }
+    }
 
-        function finishQuiz() {
-            showScreen('result-screen');
-            const pct = (state.score / QUESTIONS.length) * 100;
-            const avgTime = (state.times.reduce((a, b) => a + b, 0) / QUESTIONS.length).toFixed(1);
+    function hideStreak() {
+        document.getElementById('streak-indicator').style.display = 'none';
+    }
 
-            // Update UI
-            document.getElementById('res-score').innerText = `${state.score}/${QUESTIONS.length}`;
-            document.getElementById('res-accuracy').innerText = `${pct}%`;
-            document.getElementById('res-time').innerText = `${avgTime}s`;
-
-            if(pct >= 80) {
-                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                document.getElementById('result-icon').innerText = '🥇';
-                document.getElementById('result-title').innerText = "Grandmaster Status";
-            } else {
-                document.getElementById('result-icon').innerText = '🥈';
-                document.getElementById('result-title').innerText = "Solid Effort";
-            }
-
-            saveScore(pct);
-            renderResultChart();
+    function proceedSequence() {
+        AppState.currentIndex++;
+        if(AppState.currentIndex < DATA_VAULT.length) {
+            loadQuestion();
+        } else {
+            finalizeMission();
         }
+    }
 
-        function saveScore(pct) {
-            const entry = {
-                name: state.user,
-                score: state.score,
-                pct: pct,
-                date: new Date().toLocaleDateString()
-            };
-            const history = JSON.parse(localStorage.getItem('quiz_leaderboard') || '[]');
-            history.push(entry);
-            localStorage.setItem('quiz_leaderboard', JSON.stringify(history));
+    /* ================= END MISSION ================= */
+    function finalizeMission() {
+        showScreen('result-screen');
+        
+        const accuracy = Math.round((AppState.history.filter(h => h.isCorrect).length / DATA_VAULT.length) * 100);
+        const avgTime = (AppState.history.reduce((a, b) => a + b.timeSpent, 0) / DATA_VAULT.length).toFixed(1);
+        
+        document.getElementById('res-accuracy').textContent = accuracy + "%";
+        document.getElementById('res-xp').textContent = AppState.score;
+        document.getElementById('res-streak').textContent = AppState.maxStreak;
+        document.getElementById('res-time').textContent = avgTime + "s";
 
-            // Highscore
-            const high = localStorage.getItem('quiz_high') || 0;
-            if(state.score > high) localStorage.setItem('quiz_high', state.score);
-            updateHighscoreSidebar();
-        }
+        document.getElementById('result-status').textContent = accuracy >= 70 ? "DEPLOYMENT SUCCESSFUL" : "MISSION FAILED - RETRY REQUIRED";
+        document.getElementById('result-status').style.color = accuracy >= 70 ? "var(--success)" : "var(--accent)";
 
-        function updateHighscoreSidebar() {
-            document.getElementById('sidebar-highscore').innerText = localStorage.getItem('quiz_high') || 0;
-        }
+        saveResult(accuracy);
+        renderFinalChart();
+        updateLevel();
 
-        function renderLeaderboard() {
-            const history = JSON.parse(localStorage.getItem('quiz_leaderboard') || '[]');
-            // Sort by score then pct
-            const sorted = history.sort((a,b) => b.score - a.score || b.pct - a.pct).slice(0, 10);
-            
-            const body = document.getElementById('leaderboard-body');
-            body.innerHTML = sorted.map((entry, i) => `
-                <tr>
-                    <td>#${i+1}</td>
-                    <td style="font-weight: 600;">${entry.name}</td>
-                    <td>${entry.score}/10</td>
-                    <td><span style="color: var(--success)">${entry.pct}%</span></td>
-                    <td style="font-size: 0.8rem; color: var(--text-muted)">${entry.date}</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderResultChart() {
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            if(window.myChart) window.myChart.destroy();
-
-            window.myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: QUESTIONS.map((_, i) => `Q${i+1}`),
-                    datasets: [{
-                        label: 'Time per Question (s)',
-                        data: state.times,
-                        borderColor: '#6366f1',
-                        tension: 0.4,
-                        fill: true,
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, max: 15, grid: { color: 'rgba(255,255,255,0.05)' } },
-                        x: { grid: { display: false } }
-                    }
-                }
+        if(accuracy >= 80) {
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#8b5cf6', '#06b6d4', '#10b981']
             });
         }
+    }
 
-        // Boot
-        window.onload = init;
-    </script>
+    function renderFinalChart() {
+        const ctx = document.getElementById('performance-analysis').getContext('2d');
+        if(AppState.chartInstance) AppState.chartInstance.destroy();
+
+        AppState.chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: AppState.history.map((_, i) => `OP-${i+1}`),
+                datasets: [{
+                    label: 'Efficiency',
+                    data: AppState.history.map(h => 20 - h.timeSpent),
+                    borderColor: '#8b5cf6',
+                    backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: AppState.history.map(h => h.isCorrect ? '#10b981' : '#f43f5e'),
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { display: false },
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    /* ================= STORAGE & RANKS ================= */
+    function saveResult(acc) {
+        let ranks = JSON.parse(localStorage.getItem('zenith_ranks') || '[]');
+        ranks.push({ 
+            name: AppState.userName, 
+            xp: AppState.score, 
+            acc: acc,
+            date: new Date().toLocaleDateString()
+        });
+        ranks.sort((a,b) => b.xp - a.xp);
+        localStorage.setItem('zenith_ranks', JSON.stringify(ranks.slice(0, 15)));
+        renderRanks();
+    }
+
+    function renderRanks() {
+        const ranks = JSON.parse(localStorage.getItem('zenith_ranks') || '[]');
+        const container = document.getElementById('ranks-list');
+        
+        if(ranks.length === 0) {
+            container.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 2rem;">DATABASE EMPTY</p>';
+            return;
+        }
+
+        container.innerHTML = ranks.map((r, i) => `
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 1.2rem; border-radius: 16px; border-left: 4px solid ${i < 3 ? 'var(--secondary)' : 'rgba(255,255,255,0.05)'}">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <span style="font-family: 'Orbitron'; font-weight: 700; color: var(--text-dim); width: 30px;">#${(i+1).toString().padStart(2, '0')}</span>
+                    <div>
+                        <span style="font-weight: 800; display: block;">${r.name}</span>
+                        <span style="font-size: 0.7rem; color: var(--text-dim);">${r.acc}% ACCURACY</span>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-family: 'Orbitron'; color: var(--secondary); font-weight: 700;">${r.xp.toLocaleString()} XP</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function updateLevel() {
+        AppState.userXP += AppState.score;
+        AppState.userLevel = Math.floor(AppState.userXP / 2000) + 1;
+        const progress = ((AppState.userXP % 2000) / 2000) * 100;
+        
+        document.getElementById('user-level').textContent = `LVL ${AppState.userLevel}`;
+        document.getElementById('level-progress').style.width = `${progress}%`;
+        
+        localStorage.setItem('zenith_user_data', JSON.stringify({
+            xp: AppState.userXP,
+            level: AppState.userLevel
+        }));
+    }
+
+    function loadUserData() {
+        const data = JSON.parse(localStorage.getItem('zenith_user_data') || '{"xp":0, "level":1}');
+        AppState.userXP = data.xp;
+        AppState.userLevel = data.level;
+        updateLevel();
+    }
+
+    function shareResults() {
+        const text = `I just completed a Zenith Mission with ${AppState.score} XP and ${AppState.maxStreak} combo! Can you beat me?`;
+        navigator.clipboard.writeText(text);
+        alert("Mission stats copied to clipboard, Commander.");
+    }
+
+    window.onload = init;
+</script>
 </body>
 </html>
