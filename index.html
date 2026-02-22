@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizPro Elite | The Ultimate Challenge</title>
+    <!-- Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary: #ec4899;
+            --bg: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        .light-mode {
+            --bg: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --border: rgba(0, 0, 0, 0.05);
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            width: 100%;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: sticky;
+            top: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Typography */
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        p { color: var(--text-muted); line-height: 1.6; }
+
+        /* Buttons */
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 14px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px var(--primary); }
+
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: var(--border); }
+
+        /* Quiz Specifics */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .option-card {
+            background: var(--border);
+            padding: 1.5rem;
+            border-radius: 16px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+            text-align: left;
+            font-weight: 500;
+        }
+
+        .option-card:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+        .option-card.correct { border-color: var(--success); background: rgba(34, 197, 94, 0.2); }
+        .option-card.wrong { border-color: var(--danger); background: rgba(239, 68, 68, 0.2); }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .timer-ring {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: var(--border);
+            padding: 1.5rem;
+            border-radius: 18px;
+            text-align: center;
+        }
+
+        .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+
+        /* Leaderboard Table */
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th { text-align: left; padding: 1rem; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
+        td { padding: 1rem; border-bottom: 1px solid var(--border); }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .options-grid { grid-template-columns: 1fr; }
+            .main-content { padding: 1rem; }
+            .card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i data-lucide="zap"></i>
+                QuizPro Elite
+            </div>
+            <nav style="flex: 1;">
+                <a href="#" class="nav-item active" onclick="showScreen('home-screen')">
+                    <i data-lucide="layout-dashboard"></i> Dashboard
+                </a>
+                <a href="#" class="nav-item" onclick="showScreen('leaderboard-screen')">
+                    <i data-lucide="trophy"></i> Global Ranks
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="settings"></i> Settings
+                </a>
+            </nav>
+            <div class="stat-box" style="background: var(--primary); color: white;">
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.8rem;">BEST SCORE</p>
+                <div id="sidebar-highscore" style="font-size: 1.5rem; font-weight: 800;">0</div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <button class="btn btn-outline theme-toggle" id="themeBtn">
+                <i data-lucide="sun"></i>
+            </button>
+
+            <!-- Screen: Home -->
+            <section id="home-screen" class="screen active">
+                <div class="card">
+                    <h1 id="welcome-text">Welcome, Challenger</h1>
+                    <p>Select your domain and prove your mastery. 10 questions. 15 seconds each. Zero room for error.</p>
+                    
+                    <div class="stats-grid" style="margin-top: 2rem;">
+                        <div class="stat-box">
+                            <i data-lucide="code" style="color: var(--primary)"></i>
+                            <h3>Tech</h3>
+                            <p>Level: Hard</p>
+                        </div>
+                        <div class="stat-box">
+                            <i data-lucide="globe" style="color: var(--secondary)"></i>
+                            <h3>Geo</h3>
+                            <p>Level: Medium</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <input type="text" id="username" placeholder="Enter your alias..." class="btn btn-outline" style="flex: 1; text-align: left;">
+                        <button id="startBtn" class="btn btn-primary">Start Operative Mode <i data-lucide="arrow-right"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen: Quiz -->
+            <section id="quiz-screen" class="screen">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span id="question-category" style="background: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem;">GENERAL</span>
+                            <span id="question-difficulty" style="margin-left: 10px; color: var(--text-muted); font-size: 0.8rem;">HARD</span>
+                        </div>
+                        <div id="timer-text" style="font-weight: 800; font-size: 1.2rem; color: var(--warning);">15s</div>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+
+                    <h2 id="question-text" style="margin: 1.5rem 0; font-size: 1.8rem; line-height: 1.3;">Loading challenge...</h2>
+
+                    <div class="options-grid" id="options-container">
+                        <!-- Options injected here -->
+                    </div>
+
+                    <div style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; gap: 1rem;">
+                            <button id="lifeline-5050" class="btn btn-outline" title="50:50 Lifeline">
+                                <i data-lucide="split"></i>
+                            </button>
+                        </div>
+                        <button id="nextBtn" class="btn btn-primary" disabled>Next Question <i data-lucide="chevron-right"></i></button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen: Results -->
+            <section id="result-screen" class="screen">
+                <div class="card" style="text-align: center;">
+                    <div id="result-icon" style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+                    <h1 id="result-title">Mission Accomplished</h1>
+                    <p id="result-msg">You've successfully completed the evaluation.</p>
+
+                    <div class="stats-grid" style="margin: 2.5rem 0;">
+                        <div class="stat-box">
+                            <div class="stat-value" id="res-score">0/10</div>
+                            <p>Correct</p>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="res-accuracy">0%</div>
+                            <p>Accuracy</p>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value" id="res-time">0s</div>
+                            <p>Avg Time</p>
+                        </div>
+                    </div>
+
+                    <div style="height: 300px; margin-bottom: 2rem;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="location.reload()">New Mission</button>
+                    <button class="btn btn-outline" onclick="showScreen('leaderboard-screen')">View Rankings</button>
+                </div>
+            </section>
+
+            <!-- Screen: Leaderboard -->
+            <section id="leaderboard-screen" class="screen">
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <h1>Global Leaderboard</h1>
+                        <button class="btn btn-outline" onclick="showScreen('home-screen')">Back</button>
+                    </div>
+                    
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Operative</th>
+                                    <th>Score</th>
+                                    <th>Accuracy</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-body">
+                                <!-- Data injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const QUESTIONS = [
+            { q: "Which programming language is known as the 'mother of all languages'?", a: ["C", "Fortran", "Assembly", "Basic"], c: 0, cat: "Tech", diff: "Hard" },
+            { q: "What is the largest desert on Earth?", a: ["Sahara", "Gobi", "Antarctic", "Arabian"], c: 2, cat: "Geo", diff: "Medium" },
+            { q: "In which year was the first iPhone released?", a: ["2005", "2007", "2008", "2010"], c: 1, cat: "Tech", diff: "Easy" },
+            { q: "Which element has the chemical symbol 'Au'?", a: ["Silver", "Copper", "Gold", "Iron"], c: 2, cat: "Science", diff: "Easy" },
+            { q: "What does HTTP stand for in web terminology?", a: ["HyperText Transfer Protocol", "High Transfer Tech Protocol", "Hyper Transfer Text Program", "Hidden Text Transfer Protocol"], c: 0, cat: "Tech", diff: "Medium" },
+            { q: "Which country has the most natural lakes?", a: ["USA", "Russia", "Canada", "Australia"], c: 2, cat: "Geo", diff: "Hard" },
+            { q: "Who is credited with inventing the World Wide Web?", a: ["Steve Jobs", "Bill Gates", "Tim Berners-Lee", "Mark Zuckerberg"], c: 2, cat: "Tech", diff: "Medium" },
+            { q: "What is the capital city of Japan?", a: ["Osaka", "Kyoto", "Nagoya", "Tokyo"], c: 3, cat: "Geo", diff: "Easy" },
+            { q: "Which planet is known as the Red Planet?", a: ["Venus", "Mars", "Jupiter", "Saturn"], c: 1, cat: "Science", diff: "Easy" },
+            { q: "What is the value of Pi to 2 decimal places?", a: ["3.12", "3.14", "3.16", "3.18"], c: 1, cat: "Math", diff: "Medium" }
+        ];
+
+        // --- STATE ---
+        let state = {
+            user: "Guest",
+            currentIdx: 0,
+            score: 0,
+            timeLeft: 15,
+            timer: null,
+            answers: [], // Stores true/false for each question
+            times: [],   // Stores time taken for each
+            lifelines: { fiftyFifty: true }
+        };
+
+        // --- CORE LOGIC ---
+        function init() {
+            lucide.createIcons();
+            updateHighscoreSidebar();
+            
+            document.getElementById('startBtn').addEventListener('click', startQuiz);
+            document.getElementById('nextBtn').addEventListener('click', nextQuestion);
+            document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+            document.getElementById('lifeline-5050').addEventListener('click', useFiftyFifty);
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            // Sidebar active state
+            document.querySelectorAll('.nav-item').forEach(nav => {
+                nav.classList.toggle('active', nav.getAttribute('onclick')?.includes(id));
+            });
+
+            if(id === 'leaderboard-screen') renderLeaderboard();
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.body.classList.contains('light-mode') ? 'moon' : 'sun';
+            document.getElementById('themeBtn').innerHTML = `<i data-lucide="${icon}"></i>`;
+            lucide.createIcons();
+        }
+
+        function startQuiz() {
+            const nameInput = document.getElementById('username').value.trim();
+            state.user = nameInput || "Agent_" + Math.floor(Math.random() * 1000);
+            state.currentIdx = 0;
+            state.score = 0;
+            state.answers = [];
+            state.times = [];
+            state.lifelines.fiftyFifty = true;
+            document.getElementById('lifeline-5050').disabled = false;
+            
+            showScreen('quiz-screen');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = QUESTIONS[state.currentIdx];
+            const container = document.getElementById('options-container');
+            
+            // UI Updates
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('question-category').innerText = q.cat.toUpperCase();
+            document.getElementById('question-difficulty').innerText = q.diff.toUpperCase();
+            document.getElementById('progress-fill').style.width = `${((state.currentIdx) / QUESTIONS.length) * 100}%`;
+            document.getElementById('nextBtn').disabled = true;
+
+            // Render Options
+            container.innerHTML = '';
+            q.a.forEach((opt, i) => {
+                const div = document.createElement('div');
+                div.className = 'option-card';
+                div.innerHTML = `<span>${String.fromCharCode(65 + i)}.</span> ${opt}`;
+                div.onclick = () => selectOption(i);
+                container.appendChild(div);
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(state.timer);
+            state.timeLeft = 15;
+            updateTimerUI();
+            
+            state.timer = setInterval(() => {
+                state.timeLeft--;
+                updateTimerUI();
+                if(state.timeLeft <= 0) {
+                    clearInterval(state.timer);
+                    autoFail();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            const el = document.getElementById('timer-text');
+            el.innerText = `${state.timeLeft}s`;
+            el.style.color = state.timeLeft < 5 ? 'var(--danger)' : 'var(--warning)';
+        }
+
+        function selectOption(idx) {
+            if(document.getElementById('nextBtn').disabled === false) return; // Prevent double click
+            
+            clearInterval(state.timer);
+            const q = QUESTIONS[state.currentIdx];
+            const options = document.querySelectorAll('.option-card');
+            const isCorrect = idx === q.c;
+
+            state.times.push(15 - state.timeLeft);
+            state.answers.push(isCorrect);
+            if(isCorrect) state.score++;
+
+            options[idx].classList.add(isCorrect ? 'correct' : 'wrong');
+            if(!isCorrect) options[q.c].classList.add('correct');
+
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function autoFail() {
+            state.answers.push(false);
+            state.times.push(15);
+            const q = QUESTIONS[state.currentIdx];
+            document.querySelectorAll('.option-card')[q.c].classList.add('correct');
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function useFiftyFifty() {
+            if(!state.lifelines.fiftyFifty) return;
+            const q = QUESTIONS[state.currentIdx];
+            const options = Array.from(document.querySelectorAll('.option-card'));
+            
+            let removed = 0;
+            const shuffledIndices = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+            
+            for(let i of shuffledIndices) {
+                if(i !== q.c && removed < 2) {
+                    options[i].style.opacity = '0.2';
+                    options[i].onclick = null;
+                    removed++;
+                }
+            }
+            
+            state.lifelines.fiftyFifty = false;
+            document.getElementById('lifeline-5050').disabled = true;
+            document.getElementById('lifeline-5050').style.opacity = '0.3';
+        }
+
+        function nextQuestion() {
+            state.currentIdx++;
+            if(state.currentIdx < QUESTIONS.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            showScreen('result-screen');
+            const pct = (state.score / QUESTIONS.length) * 100;
+            const avgTime = (state.times.reduce((a, b) => a + b, 0) / QUESTIONS.length).toFixed(1);
+
+            // Update UI
+            document.getElementById('res-score').innerText = `${state.score}/${QUESTIONS.length}`;
+            document.getElementById('res-accuracy').innerText = `${pct}%`;
+            document.getElementById('res-time').innerText = `${avgTime}s`;
+
+            if(pct >= 80) {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                document.getElementById('result-icon').innerText = '🥇';
+                document.getElementById('result-title').innerText = "Grandmaster Status";
+            } else {
+                document.getElementById('result-icon').innerText = '🥈';
+                document.getElementById('result-title').innerText = "Solid Effort";
+            }
+
+            saveScore(pct);
+            renderResultChart();
+        }
+
+        function saveScore(pct) {
+            const entry = {
+                name: state.user,
+                score: state.score,
+                pct: pct,
+                date: new Date().toLocaleDateString()
+            };
+            const history = JSON.parse(localStorage.getItem('quiz_leaderboard') || '[]');
+            history.push(entry);
+            localStorage.setItem('quiz_leaderboard', JSON.stringify(history));
+
+            // Highscore
+            const high = localStorage.getItem('quiz_high') || 0;
+            if(state.score > high) localStorage.setItem('quiz_high', state.score);
+            updateHighscoreSidebar();
+        }
+
+        function updateHighscoreSidebar() {
+            document.getElementById('sidebar-highscore').innerText = localStorage.getItem('quiz_high') || 0;
+        }
+
+        function renderLeaderboard() {
+            const history = JSON.parse(localStorage.getItem('quiz_leaderboard') || '[]');
+            // Sort by score then pct
+            const sorted = history.sort((a,b) => b.score - a.score || b.pct - a.pct).slice(0, 10);
+            
+            const body = document.getElementById('leaderboard-body');
+            body.innerHTML = sorted.map((entry, i) => `
+                <tr>
+                    <td>#${i+1}</td>
+                    <td style="font-weight: 600;">${entry.name}</td>
+                    <td>${entry.score}/10</td>
+                    <td><span style="color: var(--success)">${entry.pct}%</span></td>
+                    <td style="font-size: 0.8rem; color: var(--text-muted)">${entry.date}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderResultChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            if(window.myChart) window.myChart.destroy();
+
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: QUESTIONS.map((_, i) => `Q${i+1}`),
+                    datasets: [{
+                        label: 'Time per Question (s)',
+                        data: state.times,
+                        borderColor: '#6366f1',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, max: 15, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Boot
+        window.onload = init;
+    </script>
+</body>
+</html>
